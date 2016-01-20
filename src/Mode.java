@@ -5,7 +5,9 @@ import javax.swing.ImageIcon;
 public class Mode {
 
 	private int mode = 0;
-	public Mode() {
+	MyPanel panel;
+	public Mode(MyPanel panel) {
+		this.panel = panel;
 	}
 	
 	private void resetEnviroment(int index, ArrayList<Buttons> btnList) {
@@ -24,8 +26,8 @@ public class Mode {
    		}
 	}
 
-	public void setMode(int mode, ArrayList<Buttons> btnList) {
-		resetEnviroment(mode, btnList);
+	public void setMode(MyPanel panel,int mode) {
+		panel.setMode(mode);
 	}
 
 	public int getMode() {

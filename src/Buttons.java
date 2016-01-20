@@ -11,12 +11,14 @@ public class Buttons extends JButton {
 	private ImageIcon img;
 	private int id;
 	private boolean flag = false;
-	MyPanel panel;
+	private Mode mode;
+	private MyPanel panel;
 	public Buttons(int id, MyPanel panel){
 		img = new ImageIcon("/Users/yangenci/Desktop/pic/" + (id + 1) + ".png");
 		this.id = id;
 		this.setIcon(img);
 		this.addActionListener(new btnListener());
+		mode = new Mode(panel);
 		this.panel = panel;
 	}
 	
@@ -38,13 +40,11 @@ public class Buttons extends JButton {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			flag = true;
-			panel.setMode(id);
+			mode.setMode(panel,id);
 		}	
 	}
 
 	public void setFlag(boolean b) {
 		flag = b;
 	}
-	
-
 }
