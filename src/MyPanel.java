@@ -14,6 +14,8 @@ public class MyPanel extends JPanel{
 	private static ArrayList<Line> lineList =  new ArrayList<Line>();
 	private static ArrayList<int[]> rectangleList =  new ArrayList<int[]>();
 	private static Line tmpLine;
+	private Mode modeObj;
+
 	public static int mode;
 	private int seletedEleId = 0;
 	private int idCounter = 0;
@@ -32,23 +34,6 @@ public class MyPanel extends JPanel{
    		btnList = list;
    	}
    	
-   	public void setMode(int index) {
-   		this.mode = index;
-   		ImageIcon img;
-   		for (int i = 0; i < btnList.size(); i++) {
-			if (i == mode) {
-				img = new ImageIcon("/Users/yangenci/Desktop/pic/" + (i + 1) + "p.png");
-				btnList.get(index).setFlag(true);
-			}
-			else {
-				img = new ImageIcon("/Users/yangenci/Desktop/pic/" + (i + 1) + ".png");
-				btnList.get(index).setFlag(false);
-			}
-			btnList.get(i).setImg(img);
-   		}
-   		repaint();
-   	}
-
    	public void changeName() {
    		String name;
    		name = JOptionPane.showInputDialog(null, "Enter name:");
@@ -74,7 +59,6 @@ public class MyPanel extends JPanel{
    			int endId = line.getendId();
    			int headTag = line.getheadTag();
    			int endTag = line.getendTag();
-   			System.out.println(headId + "-" + endId + "-" + headTag + "-" + endTag);
    			int[] p1 = elementList.get(headId).getSideItem(headTag);
    			int[] p2 = elementList.get(endId).getSideItem(endTag);
    			g.drawLine(p1[0], p1[1], p2[0], p2[1]);
@@ -82,7 +66,9 @@ public class MyPanel extends JPanel{
    			if(line.getMode() == 3)
    				g.fillRect(p2[0] - 5, p2[1] - 5, 10, 10);
    			
-   			if(line.getMode() == 2) {
+   			else if(line.getMode() == 2) {
+   	   			System.out.println("line MOde:" + line.getMode());
+
    				int[] xPoints = new int[3];
    		   		int[] yPoints = new int[3];
    				xPoints[0] = p2[0];
@@ -92,23 +78,15 @@ public class MyPanel extends JPanel{
    				yPoints[1] = p2[1] + 10;
    				yPoints[2] = p2[1] + 10;
    				g.fillPolygon(xPoints, yPoints, 3);
-   				//g.drawLine(p2[0], p2[1], p2[0]+5, p2[1]+5);
    			}
    		}
-   		/*if(rectangleList.size()!= 0) {
-   			//for (int i = 0; i < rectangleList.size(); i++) {
-   				g.drawRect(rectangleList.get(rectangleList.size()-1)[0], 
-   						rectangleList.get(rectangleList.size()-1)[1], 
-   						Math.abs(rectangleList.get(rectangleList.size()-1)[2] - rectangleList.get(rectangleList.size()-1)[0]),
-   						Math.abs(rectangleList.get(rectangleList.size()-1)[3] - rectangleList.get(rectangleList.size()-1)[1]));
-   			//}
-   		}*/
-   		
    	}
   
    
 
 	private void drawClass(Graphics g, int i) {
+			System.out.println(elementList.size());
+
 		Element ele = elementList.get(i);
 		g.drawRect(ele.getX(), ele.getY(), ele.getW(), ele.getH());
 		g.drawLine(ele.getX(), ele.getY() + ele.getH() / 2, ele.getX() + ele.getW(), ele.getY() + ele.getH() / 2);
@@ -148,7 +126,7 @@ public class MyPanel extends JPanel{
    				if(ele1.getSideDone(htag) != 1 && ele2.getSideDone(etag) != 1) {
    					ele1.setSideDone(htag);
    					ele2.setSideDone(etag);
-   					tmpLine = new Line(checkElement(xI, yI), checkElement(xE, yE), htag, etag, mode);
+   					tmpLine = new Line(checkElement(xI, yI), checkElement(xE, yE), htag, etag, modeObj.getMode());
    					lineList.add(tmpLine);
    				}
    			}
@@ -210,9 +188,9 @@ public class MyPanel extends JPanel{
 	}
 
 	public void click(int x, int y) {
-   		if(mode == 5 || mode == 4) {
+   		if(modeObj.getMode() == 5 || modeObj.getMode() == 4) {
    			Element element;
-   			if(mode == 4) {
+   			if(modeObj.getMode() == 4) {
    				element= new Element(x, y, 120, 100);
    				element.setName("Class");
    			}
@@ -220,12 +198,12 @@ public class MyPanel extends JPanel{
    				element = new Element(x, y, 120, 70);
    				element.setName("Use Case");
    			}
-   			element.setMode(mode);
+   			element.setMode(modeObj.getMode());
    			element.setEleId(idCounter);
    			idCounter++;
    			elementList.add(element);  			
    		}
-   		else if (mode == 0) {
+   		else if (modeObj.getMode() == 0) {
    			int index = checkElement(x, y);
    			if(index != -1) {
    				for (int i = 0; i < elementList.size(); i++) {
@@ -248,9 +226,9 @@ public class MyPanel extends JPanel{
    	}
    	
 	public void drag(int xI, int yI, int xE, int yE) {	
-		if(mode == 1 || mode == 2 || mode == 3)
+		if(modeObj.getMode() == 1 || modeObj.getMode() == 2 || modeObj.getMode() == 3)
 			drawLine(xI, yI, xE, yE);
-		else if(mode == 0)
+		else if(modeObj.getMode() == 0)
 			selectElement(xI, yI, xE, yE);	
 		repaint();
 	}
@@ -288,11 +266,9 @@ public class MyPanel extends JPanel{
 		}
 	}
 
-	
+	public void setModeObject(Mode mode) {
+		this.modeObj = mode;
+	}
 
-
-
-	
-	
-       
+     
 }

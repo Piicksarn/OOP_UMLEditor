@@ -13,12 +13,12 @@ public class Buttons extends JButton {
 	private boolean flag = false;
 	private Mode mode;
 	private MyPanel panel;
-	public Buttons(int id, MyPanel panel){
+	public Buttons(int id, MyPanel panel, Mode mode){
 		img = new ImageIcon("/Users/yangenci/Desktop/pic/" + (id + 1) + ".png");
 		this.id = id;
 		this.setIcon(img);
 		this.addActionListener(new btnListener());
-		mode = new Mode(panel);
+		this.mode = mode;
 		this.panel = panel;
 	}
 	
