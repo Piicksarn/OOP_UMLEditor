@@ -18,33 +18,24 @@ import javax.swing.JPanel;
 
 public class LayoutBoard extends JFrame{
 
-	private Panel center;
-    private Panel left;
-    private Panel editPan;
     public Color blue = new Color(0, 90, 124);
-    private static ArrayList<Buttons> btnList =  new ArrayList<Buttons>();
-    private MyPanel myPanel = new MyPanel(1);
-    
 	public LayoutBoard(double width, double hight) {
-		super("UML");
+		super("UML2");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(300, 300);
-  
+        
+        MyPanel myPanel = new MyPanel(1);
 	    EditPanel editPan = new EditPanel(myPanel);
-        center = new Panel();
-        left = new Panel();
+	    ButtonPan btnPan = new ButtonPan(myPanel);
+        Panel center = new Panel();
         
-        center.add("Draw UML", myPanel);
-        addButtons(left);
-        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-        
+        center.add("Draw UML", myPanel);        
         center.setBackground(blue);
-        left.setBackground(blue);
+        btnPan.setBackground(blue);
         editPan.setBackground(Color.red);
-   
-        
+     
         this.add(editPan, BorderLayout.NORTH);
-        this.add(left, BorderLayout.WEST);
+        this.add(btnPan, BorderLayout.WEST);
         this.add(center, BorderLayout.CENTER);
         
         this.setLocationByPlatform(true);  
@@ -53,13 +44,4 @@ public class LayoutBoard extends JFrame{
         pack();
 	}
 
-	
-	private void addButtons(Panel buttonPanel) {	
-		for(int i  = 0; i < 6; i++) {
-			Buttons btn = new Buttons(i, myPanel);
-			btnList.add(btn);
-			buttonPanel.add(btn);
-		}
-		myPanel.setBtnList(btnList);
-	}
 }
