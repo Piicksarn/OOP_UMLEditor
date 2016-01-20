@@ -20,7 +20,7 @@ public class LayoutBoard extends JFrame{
 
 	private Panel center;
     private Panel left;
-    private Panel top;
+    private Panel editPan;
     public Color blue = new Color(0, 90, 124);
     private static ArrayList<Buttons> btnList =  new ArrayList<Buttons>();
     private MyPanel myPanel = new MyPanel(1);
@@ -29,42 +29,21 @@ public class LayoutBoard extends JFrame{
 		super("UML");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(300, 300);
-        
-        JButton btnFile = new JButton("File");
-        JButton btnEdit = new JButton("Edit");
-       
-	    final JComboBox jcb = new JComboBox(new Object[]{
-			"Edit", "group", "Change object name", "Ungroup",
-		});
-	    
-	    jcb.addActionListener(new ActionListener() {
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			int k = jcb.getSelectedIndex();
-			callback(k);
-		}
-	});
-	     
-	  //  jcb.getModel().getElementAt(k);
-	    
-	    
-        top = new Panel();
+  
+	    EditPanel editPan = new EditPanel(myPanel);
         center = new Panel();
         left = new Panel();
         
-        center.add("Draw UML", new MyPanel(1));
+        center.add("Draw UML", myPanel);
         addButtons(left);
         left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
         
         center.setBackground(blue);
         left.setBackground(blue);
-        top.setBackground(Color.red);
-        top.add(btnFile);
-        top.add(jcb);
+        editPan.setBackground(Color.red);
+   
         
-        this.add(top, BorderLayout.NORTH);
+        this.add(editPan, BorderLayout.NORTH);
         this.add(left, BorderLayout.WEST);
         this.add(center, BorderLayout.CENTER);
         
@@ -74,11 +53,6 @@ public class LayoutBoard extends JFrame{
         pack();
 	}
 
-	private void callback(int k) {
-		if(k == 2)
-			myPanel.changeName();;
-		System.out.println("*:" + k);
-	}
 	
 	private void addButtons(Panel buttonPanel) {	
 		for(int i  = 0; i < 6; i++) {

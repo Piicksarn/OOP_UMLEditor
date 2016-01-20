@@ -12,6 +12,7 @@ public class MyPanel extends JPanel{
 	private static ArrayList<Buttons> btnList =  new ArrayList<Buttons>();
 	private static ArrayList<Element> elementList =  new ArrayList<Element>();
 	private static ArrayList<Line> lineList =  new ArrayList<Line>();
+	private static ArrayList<int[]> rectangleList =  new ArrayList<int[]>();
 	private static Line tmpLine;
 	public static int mode;
 	private int seletedEleId = 0;
@@ -49,7 +50,6 @@ public class MyPanel extends JPanel{
    	}
 
    	public void changeName() {
-   		System.out.println("{*}" + selected);
    		String name;
    		name = JOptionPane.showInputDialog(null, "Enter name:");
    		if(name !=null)
@@ -70,7 +70,6 @@ public class MyPanel extends JPanel{
    		if(lineList.size() != 0)
    		for (int i = 0; i < lineList.size(); i++) {
    			Line line = lineList.get(i);
-   			
    			int headId = line.getHeadId();
    			int endId = line.getendId();
    			int headTag = line.getheadTag();
@@ -96,6 +95,14 @@ public class MyPanel extends JPanel{
    				//g.drawLine(p2[0], p2[1], p2[0]+5, p2[1]+5);
    			}
    		}
+   		/*if(rectangleList.size()!= 0) {
+   			//for (int i = 0; i < rectangleList.size(); i++) {
+   				g.drawRect(rectangleList.get(rectangleList.size()-1)[0], 
+   						rectangleList.get(rectangleList.size()-1)[1], 
+   						Math.abs(rectangleList.get(rectangleList.size()-1)[2] - rectangleList.get(rectangleList.size()-1)[0]),
+   						Math.abs(rectangleList.get(rectangleList.size()-1)[3] - rectangleList.get(rectangleList.size()-1)[1]));
+   			//}
+   		}*/
    		
    	}
   
@@ -189,11 +196,17 @@ public class MyPanel extends JPanel{
 			if(elementList.get(i).getX() < xE && elementList.get(i).getX() > xI
 					&& elementList.get(i).getY() > yI
 					&& elementList.get(i).getY() < yE){
-				
+				elementList.get(i).setFlag();
 				group.addElement(elementList.get(i));
 			}
 		}
 		group.setArea(xI, yI, xE, yE);
+		int[] p = new int[4];
+		p[0] = xI;
+		p[1] = yI;
+		p[2] = xE;
+		p[3] = yE;
+		rectangleList.add(p);
 	}
 
 	public void click(int x, int y) {
@@ -225,6 +238,10 @@ public class MyPanel extends JPanel{
    				for (int i = 0; i < elementList.size(); i++) {
    		   			elementList.get(i).resetFlag();
    		   		}
+   				for (int i = 0; i < rectangleList.size(); i++) {
+   					rectangleList.remove(i);
+   				}
+   				
    			}	
    		}
 		repaint();
@@ -264,6 +281,12 @@ public class MyPanel extends JPanel{
 	public Dimension getPreferredSize() {
 		return d;
     }
+
+	public void release(int startX2, int startY2, int x, int y) {
+		if(checkElement(startX, startY)!= -1) {
+			
+		}
+	}
 
 	
 

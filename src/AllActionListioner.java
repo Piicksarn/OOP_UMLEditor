@@ -49,7 +49,7 @@ public class AllActionListioner implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		//panel.press(startX, startY, e.getX(), e.getY());
+		panel.release(startX, startY, e.getX(), e.getY());
 		System.out.println("drag end");
 	}
 
