@@ -13,13 +13,10 @@ public class MyPanel extends JPanel{
 	private static ArrayList<Element> elementList =  new ArrayList<Element>();
 	private static ArrayList<Line> lineList =  new ArrayList<Line>();
 	private static ArrayList<int[]> rectangleList =  new ArrayList<int[]>();
-	private static Line tmpLine;
 	private Mode modeObj;
 	private SelectMode selectMode;
 	private BoxMode boxMode;
-
-	public static int mode;
-	private int seletedEleId = 0;
+	private AssoMode assoMode;
 	public Color gray = new Color(237, 237, 237);
 	private Dimension d = new Dimension(600, 600); 
 	AllActionListioner listener;
@@ -32,6 +29,7 @@ public class MyPanel extends JPanel{
        	this.addMouseListener(listener);
        	selectMode = new SelectMode(elementList, this);
        	boxMode = new BoxMode(elementList, this);
+       	assoMode = new AssoMode(elementList);
 
     }   
 	
@@ -86,8 +84,6 @@ public class MyPanel extends JPanel{
    			}
    		}
    	}
-  
-   
 
 	private void drawClass(Graphics g, int i) {
 			System.out.println(elementList.size());
@@ -120,31 +116,13 @@ public class MyPanel extends JPanel{
 	}
    	
    	private void drawLine(int xI, int yI, int xE, int yE) {
-   		int htag = 0;
-		int etag = 0;
-		Element ele1 = elementList.get(checkElement(xI, yI));
-		Element ele2 = elementList.get(checkElement(xE, yE));
-   		if(checkElement(xI, yI)!= -1 && checkElement(xE, yE) != -1 ) {
-   			if(checkElement(xI, yI) != checkElement(xE, yE)) {
-   				htag = ele1.checkNear(xI, yI);
-   				etag = ele2.checkNear(xE, yE);
-   				if(ele1.getSideDone(htag) != 1 && ele2.getSideDone(etag) != 1) {
-   					ele1.setSideDone(htag);
-   					ele2.setSideDone(etag);
-   					tmpLine = new Line(checkElement(xI, yI), checkElement(xE, yE), htag, etag, modeObj.getMode());
-   					lineList.add(tmpLine);
-   				}
-   			}
-   		}
+   		assoMode.doAdd(xI, yI, xE, yE);
+   		assoMode.setMode(modeObj);
+   		lineList = assoMode.getLineList();
    	}
    
-   	/*
-   	 * The part below is for the action which controled by mouse event.  
-   	 *     # setElement	Function											 
-   	 *     # press Function															 
-   	 * 																     
-   	 * 																     
-   	 */
+   // The part below is for the action which controled by mouse event.  
+   	
    	
 	public ArrayList<Element> getEleList() {
 		return elementList;
@@ -169,28 +147,18 @@ public class MyPanel extends JPanel{
 			selectMode.selectElement(xI, yI, xE, yE, listener.getStartX(), listener.getStartY());	
 			listener.setStartX(selectMode.setX());
 			listener.setStartY(selectMode.setY());
-
 		}
 		repaint();
 	}
-	private int checkElement(int x, int y) {
-		for (int i = 0; i < elementList.size(); i++) {
-			Element ele = elementList.get(i);
-			if(x >= ele.getX() && x <= ele.getX() + ele.getW())
-				if(y >= ele.getY() && y <= ele.getY() + ele.getH()) {
-					return i;
-				}
-		}
-		return -1;		
-	}
+	
 
 	@Override
 	public Dimension getPreferredSize() {
 		return d;
     }
 
-
 	public void setModeObject(Mode mode) {
 		this.modeObj = mode;
-	}    
+	} 
+	
 }

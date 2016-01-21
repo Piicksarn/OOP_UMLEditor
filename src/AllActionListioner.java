@@ -10,13 +10,15 @@ public class AllActionListioner implements MouseListener {
 	private ArrayList<Element> eltList = new ArrayList<Element>();
 	Mode mode;
 	MyPanel panel;
+	Action action;
 	private int startX = 0;
 	private int startY = 0;
 	private int press = 0;
 	private int release = 1;
+	
 	public AllActionListioner(MyPanel myPanel, Mode mode) {
 		panel = myPanel;
-		this.mode = mode;
+		this.action = action;
 		panel.addMouseMotionListener( new MouseMotionListener() {
 			
 			@Override
@@ -31,6 +33,7 @@ public class AllActionListioner implements MouseListener {
 			}
 		});
 	}
+	
 	
 	public int getStartX() {
 		return startX;
@@ -49,7 +52,7 @@ public class AllActionListioner implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		panel.click(e.getX(), e.getY());
+		panel.click(e.getX(), e.getY());		
 	}
 
 	@Override
