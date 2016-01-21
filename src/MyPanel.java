@@ -41,7 +41,7 @@ public class MyPanel extends JPanel{
    		String name;
    		name = JOptionPane.showInputDialog(null, "Enter name:");
    		if(name !=null)
-   		elementList.get(selected).setName(name);
+   		elementList.get(selectMode.seleced()).setName(name);
    		repaint();
    	}
    	

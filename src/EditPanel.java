@@ -25,7 +25,7 @@ public class EditPanel extends JPanel{
 	    		callback(k);
 	    	}
 	    });
-	    this.add(btnEdit);
+	    this.add(jcb);
 	    this.add(btnFile);
 	}
 
