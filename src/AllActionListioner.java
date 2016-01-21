@@ -8,14 +8,15 @@ import java.util.ArrayList;
 public class AllActionListioner implements MouseListener {
 
 	private ArrayList<Element> eltList = new ArrayList<Element>();
-	private int mode;
+	Mode mode;
 	MyPanel panel;
 	private int startX = 0;
 	private int startY = 0;
 	private int press = 0;
 	private int release = 1;
-	public AllActionListioner(MyPanel myPanel) {
+	public AllActionListioner(MyPanel myPanel, Mode mode) {
 		panel = myPanel;
+		this.mode = mode;
 		panel.addMouseMotionListener( new MouseMotionListener() {
 			
 			@Override
@@ -27,30 +28,39 @@ public class AllActionListioner implements MouseListener {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				panel.drag(startX, startY, e.getX(), e.getY());
-				//panel.setFlagDown(e.getX(), e.getY());
-				System.out.println("drageing");
 			}
 		});
+	}
+	
+	public int getStartX() {
+		return startX;
+	}
+	
+	public int getStartY() {
+		return startY;
+	}
+	public void setStartX(int x) {
+		startX = x;;
+	}
+	
+	public void setStartY(int y) {
+		startY = y;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		panel.click(e.getX(), e.getY());
-		System.out.println("click!");
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		
+	public void mousePressed(MouseEvent e) {	
 		startX = e.getX();
 		startY = e.getY();
-		panel.setActStartXY(startX, startY);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		panel.release(startX, startY, e.getX(), e.getY());
-		System.out.println("drag end");
+		
 	}
 
 	@Override

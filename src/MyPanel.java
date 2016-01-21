@@ -15,19 +15,24 @@ public class MyPanel extends JPanel{
 	private static ArrayList<int[]> rectangleList =  new ArrayList<int[]>();
 	private static Line tmpLine;
 	private Mode modeObj;
+	private SelectMode selectMode;
+	private BoxMode boxMode;
 
 	public static int mode;
 	private int seletedEleId = 0;
-	private int idCounter = 0;
 	public Color gray = new Color(237, 237, 237);
 	private Dimension d = new Dimension(600, 600); 
-	AllActionListioner listener = new AllActionListioner(this);
+	AllActionListioner listener;
 	private static int selected = 0;
 	private Group group = new Group();
 	
 	public MyPanel(int index) {
        	this.setBackground(gray);
+       	listener = new AllActionListioner(this,modeObj);
        	this.addMouseListener(listener);
+       	selectMode = new SelectMode(elementList, this);
+       	boxMode = new BoxMode(elementList, this);
+
     }   
 	
    	public void setBtnList(ArrayList<Buttons> list) {
@@ -132,35 +137,7 @@ public class MyPanel extends JPanel{
    			}
    		}
    	}
-   	
-   	private int startX = 0;
-   	private int startY = 0;
-   	
-   	public void setActStartXY(int startX2, int startY2) {
-		startX = startX2;
-		startY = startY2;	
-	}
-   	
-   	private void selectElement(int xI, int yI, int xE, int yE) {
-   		if(checkElement(startX, startY)!= -1) {
-   			for (int i = 0; i < elementList.size(); i++) {
-	   			elementList.get(i).resetFlag();
-	   		}
-   			Element ele = elementList.get(checkElement(startX, startY));
-   			int delX = xE - startX;
-   			int delY = yE - startY;
-			
-   			if(checkElement(startX, startY) != -1)
-   				ele.setPosition(ele.getX() + delX, ele.getY() + delY);
-   			startX = xE;
-   			startY = yE;
-   			repaint();
-   		}
-   		else {
-   			findArea(xI, yI, xE, yE);
-   		}
-	}
-   	
+   
    	/*
    	 * The part below is for the action which controled by mouse event.  
    	 *     # setElement	Function											 
@@ -169,58 +146,18 @@ public class MyPanel extends JPanel{
    	 * 																     
    	 */
    	
-	private void findArea(int xI, int yI, int xE, int yE) {
-		for (int i = 0; i < elementList.size(); i++) {
-			if(elementList.get(i).getX() < xE && elementList.get(i).getX() > xI
-					&& elementList.get(i).getY() > yI
-					&& elementList.get(i).getY() < yE){
-				elementList.get(i).setFlag();
-				group.addElement(elementList.get(i));
-			}
-		}
-		group.setArea(xI, yI, xE, yE);
-		int[] p = new int[4];
-		p[0] = xI;
-		p[1] = yI;
-		p[2] = xE;
-		p[3] = yE;
-		rectangleList.add(p);
+	public ArrayList<Element> getEleList() {
+		return elementList;
 	}
-
 	public void click(int x, int y) {
    		if(modeObj.getMode() == 5 || modeObj.getMode() == 4) {
-   			Element element;
-   			if(modeObj.getMode() == 4) {
-   				element= new Element(x, y, 120, 100);
-   				element.setName("Class");
-   			}
-   			else {
-   				element = new Element(x, y, 120, 70);
-   				element.setName("Use Case");
-   			}
-   			element.setMode(modeObj.getMode());
-   			element.setEleId(idCounter);
-   			idCounter++;
-   			elementList.add(element);  			
+   			boxMode.setPos(x,y);
+   			boxMode.setMode(modeObj);
+   			boxMode.doAdd();
    		}
    		else if (modeObj.getMode() == 0) {
-   			int index = checkElement(x, y);
-   			if(index != -1) {
-   				for (int i = 0; i < elementList.size(); i++) {
-   		   			elementList.get(i).resetFlag();
-   		   		}
-   				elementList.get(index).setFlag();
-   				selected = index;
-   			}
-   			else {
-   				for (int i = 0; i < elementList.size(); i++) {
-   		   			elementList.get(i).resetFlag();
-   		   		}
-   				for (int i = 0; i < rectangleList.size(); i++) {
-   					rectangleList.remove(i);
-   				}
-   				
-   			}	
+   			selectMode.setPos(x,y);
+   			selectMode.doSelect();
    		}
 		repaint();
    	}
@@ -228,29 +165,21 @@ public class MyPanel extends JPanel{
 	public void drag(int xI, int yI, int xE, int yE) {	
 		if(modeObj.getMode() == 1 || modeObj.getMode() == 2 || modeObj.getMode() == 3)
 			drawLine(xI, yI, xE, yE);
-		else if(modeObj.getMode() == 0)
-			selectElement(xI, yI, xE, yE);	
+		else if(modeObj.getMode() == 0) {
+			selectMode.selectElement(xI, yI, xE, yE, listener.getStartX(), listener.getStartY());	
+			listener.setStartX(selectMode.setX());
+			listener.setStartY(selectMode.setY());
+
+		}
 		repaint();
 	}
-
-	public void move(int x, int y) {
-		
-	}
-	
-	public void startPress(int x, int y) {
-		
-	}
-	
 	private int checkElement(int x, int y) {
 		for (int i = 0; i < elementList.size(); i++) {
 			Element ele = elementList.get(i);
 			if(x >= ele.getX() && x <= ele.getX() + ele.getW())
 				if(y >= ele.getY() && y <= ele.getY() + ele.getH()) {
-				
-					System.out.println(ele.getFlag());
 					return i;
 				}
-				
 		}
 		return -1;		
 	}
@@ -260,15 +189,8 @@ public class MyPanel extends JPanel{
 		return d;
     }
 
-	public void release(int startX2, int startY2, int x, int y) {
-		if(checkElement(startX, startY)!= -1) {
-			
-		}
-	}
 
 	public void setModeObject(Mode mode) {
 		this.modeObj = mode;
-	}
-
-     
+	}    
 }
