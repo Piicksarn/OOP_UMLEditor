@@ -5,12 +5,13 @@ import javax.swing.ImageIcon;
 public class Mode {
 
 	private int mode = 0;
-	MyPanel panel;
 	ArrayList<Buttons> btnList;
+	Action action ;
 	public Mode(MyPanel panel, ArrayList<Buttons> btnList) {
-		this.panel = panel;
 		this.btnList = btnList;
-		panel.setModeObject(this);
+		action = new Action(this);
+		panel.setModeObject(this, action);
+		action.setModeObject(this);
 	}
 	
 	private void resetEnviroment(int index, ArrayList<Buttons> btnList) {
@@ -29,12 +30,15 @@ public class Mode {
    		}
 	}
 
-	public void setMode(MyPanel panel,int mode) {
+	public void setMode(int mode) {
 		this.mode = mode;
 		resetEnviroment(mode, btnList);
 	}
 
 	public int getMode() {
 		return mode;
+	}
+	public Action getAction() {
+		return action;
 	}
 }

@@ -13,10 +13,11 @@ public class MyPanel extends JPanel{
 	private static ArrayList<Element> elementList =  new ArrayList<Element>();
 	private static ArrayList<Line> lineList =  new ArrayList<Line>();
 	private static ArrayList<int[]> rectangleList =  new ArrayList<int[]>();
-	private Mode modeObj;
+	private static Mode modeObj;
 	private SelectMode selectMode;
 	private BoxMode boxMode;
 	private AssoMode assoMode;
+	private Action action;
 	public Color gray = new Color(237, 237, 237);
 	private Dimension d = new Dimension(600, 600); 
 	AllActionListioner listener;
@@ -25,12 +26,11 @@ public class MyPanel extends JPanel{
 	
 	public MyPanel(int index) {
        	this.setBackground(gray);
-       	listener = new AllActionListioner(this,modeObj);
+       	listener = new AllActionListioner(this);
        	this.addMouseListener(listener);
        	selectMode = new SelectMode(elementList, this);
        	boxMode = new BoxMode(elementList, this);
        	assoMode = new AssoMode(elementList);
-
     }   
 	
    	public void setBtnList(ArrayList<Buttons> list) {
@@ -86,8 +86,6 @@ public class MyPanel extends JPanel{
    	}
 
 	private void drawClass(Graphics g, int i) {
-			System.out.println(elementList.size());
-
 		Element ele = elementList.get(i);
 		g.drawRect(ele.getX(), ele.getY(), ele.getW(), ele.getH());
 		g.drawLine(ele.getX(), ele.getY() + ele.getH() / 2, ele.getX() + ele.getW(), ele.getY() + ele.getH() / 2);
@@ -115,7 +113,7 @@ public class MyPanel extends JPanel{
    		repaint();
 	}
    	
-   	private void drawLine(int xI, int yI, int xE, int yE) {
+   	public void drawLine(int xI, int yI, int xE, int yE) {
    		assoMode.doAdd(xI, yI, xE, yE);
    		assoMode.setMode(modeObj);
    		lineList = assoMode.getLineList();
@@ -127,38 +125,17 @@ public class MyPanel extends JPanel{
 	public ArrayList<Element> getEleList() {
 		return elementList;
 	}
-	public void click(int x, int y) {
-   		if(modeObj.getMode() == 5 || modeObj.getMode() == 4) {
-   			boxMode.setPos(x,y);
-   			boxMode.setMode(modeObj);
-   			boxMode.doAdd();
-   		}
-   		else if (modeObj.getMode() == 0) {
-   			selectMode.setPos(x,y);
-   			selectMode.doSelect();
-   		}
-		repaint();
-   	}
-   	
-	public void drag(int xI, int yI, int xE, int yE) {	
-		if(modeObj.getMode() == 1 || modeObj.getMode() == 2 || modeObj.getMode() == 3)
-			drawLine(xI, yI, xE, yE);
-		else if(modeObj.getMode() == 0) {
-			selectMode.selectElement(xI, yI, xE, yE, listener.getStartX(), listener.getStartY());	
-			listener.setStartX(selectMode.setX());
-			listener.setStartY(selectMode.setY());
-		}
-		repaint();
-	}
-	
 
 	@Override
 	public Dimension getPreferredSize() {
 		return d;
     }
 
-	public void setModeObject(Mode mode) {
+	public void setModeObject(Mode mode, Action action) {
 		this.modeObj = mode;
+		this.action = action;
+		listener.setAction(action);
+       	action.actionInit(selectMode, boxMode, assoMode, this);
 	} 
 	
 }

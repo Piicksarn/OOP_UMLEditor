@@ -40,7 +40,7 @@ public class Buttons extends JButton {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			flag = true;
-			mode.setMode(panel,id);
+			mode.setMode(id);
 		}	
 	}
 

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class AllActionListioner implements MouseListener {
 
 	private ArrayList<Element> eltList = new ArrayList<Element>();
-	Mode mode;
 	MyPanel panel;
 	Action action;
 	private int startX = 0;
@@ -16,25 +15,27 @@ public class AllActionListioner implements MouseListener {
 	private int press = 0;
 	private int release = 1;
 	
-	public AllActionListioner(MyPanel myPanel, Mode mode) {
+	public AllActionListioner(MyPanel myPanel) {
 		panel = myPanel;
 		this.action = action;
+
 		panel.addMouseMotionListener( new MouseMotionListener() {
 			
 			@Override
 			public void mouseMoved(MouseEvent arg0) {	
 				
-				
 			}
 			
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				panel.drag(startX, startY, e.getX(), e.getY());
+				action.drag(startX, startY, e.getX(), e.getY());
 			}
 		});
 	}
 	
-	
+	public void setAction(Action action) {
+	this.action = action;
+	}
 	public int getStartX() {
 		return startX;
 	}
@@ -52,7 +53,7 @@ public class AllActionListioner implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		panel.click(e.getX(), e.getY());		
+		action.click(e.getX(), e.getY());		
 	}
 
 	@Override
